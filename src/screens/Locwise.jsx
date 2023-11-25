@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
 import COLORS from "../constants/colors";
-import styles from "../Styles/styles";
+import styles from "../../Styles/styles";
 import MapView, { Marker, Polygon, Callout } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 import { useTheme } from "../context/ThemeContext";
 import { hostIP } from "@env";
 import * as geolib from "geolib";

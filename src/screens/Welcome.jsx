@@ -13,8 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { hostIP } from "@env";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import COLORS from "../constants/colors";
-import Button from "../components/Button";
-import styles from "../Styles/styles";
+import Button from "../../components/Button";
+import styles from "../../Styles/styles";
 
 const Welcome = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -119,7 +119,7 @@ const Welcome = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require("../assets/otrobg.jpg")}
+      source={require("../../assets/otrobg.jpg")}
       style={styles.imgwelcome}
     >
       <View style={styles.container}>

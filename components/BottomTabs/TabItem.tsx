@@ -7,11 +7,11 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import Feather from 'react-native-vector-icons/Feather';
-import {getPathXCenterByIndex} from '../../utils/Path';
-import usePath from '../../hooks/usePath';
-import {SCREEN_WIDTH} from '../../constants/Screen';
-import COLORS from '../../constants/colors';
-import { useTheme } from "../../context/ThemeContext";
+import {getPathXCenterByIndex} from '../../src/utils/Path';
+import usePath from '../../src/hooks/usePath';
+import {SCREEN_WIDTH} from '../../src/constants/Screen';
+import COLORS from '../../src/constants/colors';
+import { useTheme } from "../../src/context/ThemeContext";
 export type TabProps = {
   label: string;
   icon: string;

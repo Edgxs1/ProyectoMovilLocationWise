@@ -13,7 +13,7 @@ import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { hostIP } from "@env";
 import Checkbox from "expo-checkbox";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 
 
 const Signup = ({ navigation }) => {
@@ -108,11 +108,11 @@ const Signup = ({ navigation }) => {
   return (
     <View style={styles.createaccount}>
       <View style={styles.Image}>
-        <Image source={require("../assets/imagetop1.jpg")} style={styles.img} />
+        <Image source={require("../../assets/imagetop1.jpg")} style={styles.img} />
       </View>
       <View style={styles.container}>
         <View style={styles.create}>
-          <Image source={require("../assets/logo.png")} style={styles.logo} />
+          <Image source={require("../../assets/logo.png")} style={styles.logo} />
           <Text style={styles.txtcreate}>Crea tu Cuenta</Text>
         </View>
         <View style={styles.containerInputs}>

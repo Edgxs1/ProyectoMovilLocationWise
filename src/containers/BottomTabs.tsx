@@ -1,4 +1,4 @@
-import CustomBottomTab from "../components/BottomTabs/CustomBottomTab";
+import CustomBottomTab from "../../components/BottomTabs/CustomBottomTab";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Inicio from "../screens/Inicio";
 import Blog from "../screens/Blog";

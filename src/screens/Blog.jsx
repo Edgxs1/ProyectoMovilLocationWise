@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, ScrollView, Image } from "react-native";
 import COLORS from "../constants/colors";
-import styles from "../Styles/styles";
+import styles from "../../Styles/styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../context/ThemeContext";
 
@@ -20,7 +20,7 @@ const Blog = () => {
           <View>
             <View style={styles.containerlogo}>
               <Image
-                source={require("../assets/logo.png")}
+                source={require("../../assets/logo.png")}
                 style={{
                   height: 50,
                   width: 50,

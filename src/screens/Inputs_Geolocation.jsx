@@ -11,10 +11,10 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
 import { useFonts } from "expo-font";
-import styles from "../Styles/styles";
+import styles from "../../Styles/styles";
 import MapView, { Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 import { useState } from "react";
 import { textoLargo } from "../constants/textolargo";
 import Modal from "react-native-modal";

@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { ThemeProvider } from "./context/ThemeContext";
+import { ThemeProvider } from "./src/context/ThemeContext";
 
 
 import Navigation from "./Navigation";
@@ -20,8 +20,8 @@ export default function App() {
     await Font.loadAsync({
       "Roboto-LightItalic": require("./assets/fonts/Roboto-LightItalic.ttf"),
       "Roboto-Italic": require("./assets/fonts/Roboto-Italic.ttf"),
-      Helvetica: require("./assets/fonts/HelveticaThin.ttf"),
-      Montserrat: require("./assets/fonts/Montserrat-V.ttf"),
+      "Helvetica": require("./assets/fonts/HelveticaThin.ttf"),
+      "Montserrat": require("./assets/fonts/Montserrat-V.ttf"),
       "Montserrat-Italic": require("./assets/fonts/Montserrat-Italic.ttf"),
     });
     setFontsLoaded(true);

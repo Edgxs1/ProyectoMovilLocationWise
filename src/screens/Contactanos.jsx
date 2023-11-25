@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Alert } from "react-native";
+import { View, Text, TextInput, Alert, ScrollView } from "react-native";
 import COLORS from "../constants/colors";
-import Button from "../components/Button";
-import styles from "../Styles/styles";
+import Button from "../../components/Button";
+import styles from "../../Styles/styles";
 import { useTheme } from "../context/ThemeContext";
 
 const Contactanos = () => {

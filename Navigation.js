@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import BottomTabs from './containers/BottomTabs';
+import BottomTabs from './src/containers/BottomTabs';
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -10,8 +10,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
 //screens
-import  Signup  from './screens/Signup';
-import  Welcome  from './screens/Welcome';
+import  Signup  from './src/screens/Signup';
+import  Welcome  from './src/screens/Welcome';
 
 
 import * as Font from "expo-font";

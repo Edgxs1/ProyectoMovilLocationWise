@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import COLORS from "../constants/colors";
-import styles from "../Styles/styles";
+import styles from "../../Styles/styles";
 import { useNavigation } from "@react-navigation/native";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 import { useTheme } from "../context/ThemeContext";
-import CustomPicker from "../components/CustomPicker";
+import CustomPicker from "../../components/CustomPicker";
 import {
   opnivelso,
   opnivesc,

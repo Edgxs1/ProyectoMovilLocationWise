@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
 import { useFonts } from "expo-font";
-import styles from "../Styles/styles";
+import styles from "../../Styles/styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../context/ThemeContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';

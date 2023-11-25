@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
-import COLORS from "../constants/colors";
+import COLORS from "../src/constants/colors";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Button = (props) => {

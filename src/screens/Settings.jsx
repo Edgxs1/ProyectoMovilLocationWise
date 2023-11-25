@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, ScrollView, Switch } from "react-native";
 import COLORS from "../constants/colors";
-import styles from "../Styles/styles";
+import styles from "../../Styles/styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../context/ThemeContext";
 import { StatusBar } from "react-native";

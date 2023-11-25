@@ -8,15 +8,15 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {interpolatePath} from 'react-native-redash';
-import COLORS from '../../constants/colors';
+import COLORS from '../../src/constants/colors';
 
-import {SCREEN_WIDTH} from '../../constants/Screen';
-import usePath from '../../hooks/usePath';
-import {getPathXCenter} from '../../utils/Path';
+import {SCREEN_WIDTH} from '../../src/constants/Screen';
+import usePath from '../../src/hooks/usePath';
+import {getPathXCenter} from '../../src/utils/Path';
 import TabItem from './TabItem';
 import AnimatedCircle from './AnimatedCircle';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../src/context/ThemeContext";
 
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);

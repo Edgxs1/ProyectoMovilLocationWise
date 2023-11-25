@@ -8,18 +8,21 @@ import {
   SafeAreaView,
 } from "react-native";
 import COLORS from "../constants/colors";
-import styles from "../Styles/styles";
-import MapView, { Marker } from "react-native-maps";
+import styles from "../../Styles/styles";
+import MapView, { Marker, Polygon, Callout } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 import { textoLargo } from "../constants/textolargo";
 import Slider from "@react-native-community/slider";
 import { useTheme } from "../context/ThemeContext";
 import { hostIP } from "@env";
 import Modal from "react-native-modal";
+import * as geolib from "geolib";
 
 const Geolocation = ({ route }) => {
   const { theme } = useTheme();
+  const navigation = useNavigation();
+
   const [sliderValue, setSliderValue] = useState(50);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedCvegeo, setSelectedCvegeo] = useState(null);
@@ -32,8 +35,19 @@ const Geolocation = ({ route }) => {
   const [gradoescmas, setGradoescmas] = useState(null);
   const [edprom, setEdprom] = useState(null);
   const [data, setData] = useState(null);
-
-  const [cvegeores, setCvegeores] = useState(null);
+  const [agebData, setAgebData] = useState([]);
+  const [markerCoordinate, setMarkerCoordinate] = useState(null);
+  const [zonesDeployed, setZonesDeployed] = useState(false);
+  const [cvegeo1, setCvegeo1] = useState(null);
+  const [pobtot1, setPobtot1] = useState(null);
+  const [pobmas1, setPobmas1] = useState(null);
+  const [pobfem1, setPobfem1] = useState(null);
+  const [nivsoc1, setNivsoc1] = useState(null);
+  const [gradoesc1, setGradoesc1] = useState(null);
+  const [gradoescfem1, setGradoescfem1] = useState(null);
+  const [gradoescmas1, setGradoescmas1] = useState(null);
+  const [edprom1, setEdprom1] = useState(null);
+  const [selectedCvegeo1, setSelectedCvegeo1] = useState(null);
 
   useEffect(() => {
     // Cuando el componente se monta, actualiza el estado con los datos recibidos
@@ -47,8 +61,81 @@ const Geolocation = ({ route }) => {
       setGradoescfem(route.params.gradoescfem);
       setGradoescmas(route.params.gradoescmas);
       setEdprom(route.params.edprom);
+      setAgebData(route.params.agebData);
     }
   }, [route.params]);
+
+  const handleMapPress = async (event) => {
+    const { coordinate } = event.nativeEvent;
+    setMarkerCoordinate(coordinate);
+    const selectedAgebData = findAgebDataByCoordinate(coordinate);
+    if (selectedAgebData) {
+      setSelectedCvegeo1(selectedAgebData.cvegeo);
+
+      try {
+        // Load AGEB data asynchronously
+        await getAgebDataBycvegeo(selectedAgebData.cvegeo);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    }
+  };
+
+  const findAgebDataByCoordinate = (coordinate) => {
+    const selectedAgebData = agebData.find((agebData) => {
+      const stAsGeoJSON = JSON.parse(agebData.st_asgeojson);
+      const polygonCoordinates = stAsGeoJSON.coordinates[0][0].map(
+        ([longitude, latitude]) => ({ latitude, longitude })
+      );
+
+      const isPointInside = geolib.isPointInPolygon(
+        coordinate,
+        polygonCoordinates
+      );
+
+      return isPointInside;
+    });
+
+    return selectedAgebData || null;
+  };
+
+  const getAgebDataBycvegeo = async (cvegeo) => {
+    const ageb_endpoint = `http://${hostIP}:3000/locationwise/v1/geocode-settlement/${cvegeo}`;
+    console.log("Ip:", hostIP);
+    console.log("Fetching: " + ageb_endpoint);
+    try {
+      const response = await fetch(ageb_endpoint, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (response.ok) {
+        const res = await response.json();
+
+        //console.log("AGEB data fetched: " + JSON.stringify(res));
+        //return res;
+        if (res && res.length > 0) {
+          const agebbycvegeo = res[0];
+          setPobtot1(agebbycvegeo?.pobtot);
+          setPobmas1(agebbycvegeo?.pobmas);
+          setPobfem1(agebbycvegeo?.pobfem);
+          setNivsoc1(agebbycvegeo?.lw_economiapred);
+          setGradoesc1(agebbycvegeo?.graproes);
+          setGradoescfem1(agebbycvegeo?.graproes_f);
+          setGradoescmas1(agebbycvegeo?.graproes_m);
+          setEdprom1(agebbycvegeo?.lw_edprom);
+        } else {
+          console.log(
+            "La respuesta está vacía o no tiene el formato esperado."
+          );
+        }
+      } else {
+        console.log("AGEB data not found");
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -104,7 +191,7 @@ const Geolocation = ({ route }) => {
       if (lw_economiapred == "A/B") {
         lw_economiapred = "A%2FB";
       }
-      console.log("ip" + hostIP);
+      //console.log("ip" + hostIP);
       const similarity_endoint =
         `http://${hostIP}:3000/locationwise/v1/geocode-settlement/getsimilarsettlements/` +
         nivsoc +
@@ -126,12 +213,16 @@ const Geolocation = ({ route }) => {
         const data = await response.json();
 
         // Utiliza Alert para mostrar mensajes...
-        setModalVisible(true);
         setData(data);
+        //console.log("data: " + JSON.stringify(data));
         if (data && data.length > 0) {
           const agebbycvegeo = data[0];
-          setCvegeores(agebbycvegeo?.cvegeo);
-          console.log("cvegeo: " + agebbycvegeo?.cvegeo);
+          //console.log("cvegeo: " + agebbycvegeo?.cvegeo);
+          if (agebbycvegeo?.cvegeo == selectedCvegeo) {
+            console.log("son iguales");
+          } else {
+            setModalVisible(true);
+          }
         } else {
           console.log(
             "La respuesta está vacía o no tiene el formato esperado."
@@ -155,7 +246,7 @@ const Geolocation = ({ route }) => {
     latitudeDelta: 0.0922, // Zoom inicial
     longitudeDelta: 0.0421, // Zoom inicial
   };
-  const navigation = useNavigation();
+
   return (
     <View
       style={
@@ -279,8 +370,8 @@ const Geolocation = ({ route }) => {
                           }
                     }
                   >
-                    "se han encontrado", {data?.length ?? 0}, " zonas similares a la tuya";
-
+                    "se han encontrado", {data?.length ?? 0}, " zonas similares
+                    a la tuya";
                   </Text>
                   <View
                     style={{
@@ -516,15 +607,55 @@ const Geolocation = ({ route }) => {
                 ZONAS CON CARACTERÍSTICAS SIMILARES A LA TUYA:
               </Text>
             </View>
-            <MapView style={styles.map} initialRegion={initialRegion} />
-            <Marker
-              coordinate={{
-                latitude: 19.4326, // Latitud de la Ciudad de México
-                longitude: -99.1332, // Longitud de la Ciudad de México
-              }}
-              title="Ciudad de México"
-              description="Capital de México"
-            />
+            <MapView
+              style={styles.map}
+              initialRegion={initialRegion}
+              onPress={handleMapPress}
+            >
+              {agebData.map((agebData) => {
+                try {
+                  //console.log("DIBUJANDOOOOO");
+                  const stAsGeoJSON = JSON.parse(agebData.st_asgeojson);
+                  const coordinates = stAsGeoJSON.coordinates[0][0].map(
+                    ([longitude, latitude]) => ({ latitude, longitude })
+                  );
+
+                  // Verificar si el cvegeo está presente en data
+                  const cvegeoEnData =
+                    data &&
+                    data.find((item) => item.cvegeo === agebData.cvegeo);
+
+                  if (cvegeoEnData) {
+                    return (
+                      <Polygon
+                        key={agebData.cvegeo}
+                        coordinates={coordinates}
+                        strokeWidth={1}
+                        fillColor="rgba(76, 254, 232, 0.7)"
+                      />
+                    );
+                  } else {
+                    return null;
+                  }
+                } catch (error) {
+                  console.error("Error parsing st_asgeojson:", error);
+                  return null;
+                }
+              })}
+              {markerCoordinate && (
+                <Marker
+                  coordinate={markerCoordinate}
+                  title={selectedCvegeo1 || "Sin selección"}
+                  description={`Latitud: ${markerCoordinate.latitude}, Longitud: ${markerCoordinate.longitude}`}
+                >
+                  <Callout>
+                    <View>
+                      <Text>{selectedCvegeo1}</Text>
+                    </View>
+                  </Callout>
+                </Marker>
+              )}
+            </MapView>
           </View>
           <View>
             <Text
@@ -556,6 +687,9 @@ const Geolocation = ({ route }) => {
                   placeholder="Selecciona una zona en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={
+                    selectedCvegeo1 !== null ? String(selectedCvegeo1) : ""
+                  }
                   style={{
                     width: "100%",
                   }}
@@ -578,6 +712,7 @@ const Geolocation = ({ route }) => {
                   placeholder="Selecciona una zona en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={pobtot1 !== null ? String(pobtot1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -600,6 +735,7 @@ const Geolocation = ({ route }) => {
                   placeholder="Selecciona una zona en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={pobmas1 !== null ? String(pobmas1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -622,6 +758,7 @@ const Geolocation = ({ route }) => {
                   placeholder="Selecciona una zona en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={pobfem1 !== null ? String(pobfem1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -644,6 +781,7 @@ const Geolocation = ({ route }) => {
                   placeholder="Selecciona una zona en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={nivsoc1 !== null ? String(nivsoc1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -666,6 +804,7 @@ const Geolocation = ({ route }) => {
                   placeholder="Selecciona una zona en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={gradoesc1 !== null ? String(gradoesc1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -688,6 +827,7 @@ const Geolocation = ({ route }) => {
                   placeholder="Selecciona una zona en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={gradoescfem1 !== null ? String(gradoescfem1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -710,12 +850,20 @@ const Geolocation = ({ route }) => {
                   placeholder="Selecciona una zona en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={gradoescmas1 !== null ? String(gradoescmas1) : ""}
                   style={{
                     width: "100%",
                   }}
                   editable={false}
                 />
               </View>
+            </View>
+            <View style={{ width: "60%", alignSelf: "center", marginTop: 30 }}>
+              <Button
+                title="Regresar al inicio"
+                onPress={() => navigation.navigate("SolucionesScreen")}
+                style={{ height: 40 }}
+              />
             </View>
           </View>
           <View style={styles.textend}>

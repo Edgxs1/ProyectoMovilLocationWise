@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, { FC } from 'react';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../src/context/ThemeContext';
 
 type CircleProps = {
   circleX: Animated.SharedValue<number>;

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import COLORS from "../constants/colors";
-import styles from "../Styles/styles";
+import styles from "../../Styles/styles";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -35,7 +35,7 @@ const Soluciones = () => {
             </View>
             <View style={styles.containerSol}>
               <Image
-                source={require("../assets/logo.png")}
+                source={require("../../assets/logo.png")}
                 style={{
                   height: 60,
                   width: 60,
@@ -128,7 +128,7 @@ const Soluciones = () => {
                   </View>
                 </View>
                 <Image
-                  source={require("../assets/demostrativas/demostrativo1.png")}
+                  source={require("../../assets/demostrativas/demostrativo1.png")}
                   style={styles.imagedemo}
                 />
                 <Icon
@@ -149,7 +149,7 @@ const Soluciones = () => {
                   Confirma
                 </Text>
                 <Image
-                  source={require("../assets/demostrativas/demostrativo2.png")}
+                  source={require("../../assets/demostrativas/demostrativo2.png")}
                   style={styles.imagedemo}
                 />
                 <Icon
@@ -170,7 +170,7 @@ const Soluciones = () => {
                   Ingresa una similaridad en base a la zona de tu negocio
                 </Text>
                 <Image
-                  source={require("../assets/demostrativas/demostrativo3.png")}
+                  source={require("../../assets/demostrativas/demostrativo3.png")}
                   style={styles.imagedemo1}
                 />
                 <Icon
@@ -191,7 +191,7 @@ const Soluciones = () => {
                   Visualiza las zonas similares
                 </Text>
                 <Image
-                  source={require("../assets/demostrativas/demostrativo4.png")}
+                  source={require("../../assets/demostrativas/demostrativo4.png")}
                   style={styles.imagedemo}
                 />
               </View>
