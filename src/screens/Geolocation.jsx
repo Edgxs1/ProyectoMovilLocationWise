@@ -631,7 +631,8 @@ const Geolocation = ({ route }) => {
                         key={agebData.cvegeo}
                         coordinates={coordinates}
                         strokeWidth={1}
-                        fillColor="rgba(76, 254, 232, 0.7)"
+                        strokeColor="rgb(113, 201, 206)"
+                        fillColor="rgba(203, 241, 245, 0.7)"
                       />
                     );
                   } else {

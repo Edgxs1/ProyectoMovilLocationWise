@@ -54,8 +54,8 @@ const Inicio = () => {
   }
 
   async function getUserDataByID(id) {
-    const user_endpoint = `http://${hostIP}:3000/locationwise/v1/users/data/${id}`;
     console.log("Ip:", hostIP);
+    const user_endpoint = `http://${hostIP}:3000/locationwise/v1/users/data/${id}`;
     console.log("Fetching: " + user_endpoint);
     try {
       const response = await fetch(user_endpoint, {

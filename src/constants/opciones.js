@@ -1,10 +1,11 @@
 export const opnivelso = [
-    { label: "Próspero (A/B)", value: "lw_economia_ab" },
-    { label: "Alto (C+)", value: "lw_economia_cp" },
-    { label: "Medio Alto (C)", value: "lw_economia_c" },
-    { label: "Medio Bajo (D+)", value: "lw_economia_dp" },
-    { label: "Bajo (D)", value: "lw_economia_d" },
-    { label: "Precario (E)", value: "lw_economia_e" },
+    { label: "Próspero (A/B)", value: "A%2FB'" },
+    { label: "Alto (C+)", value: "C+" },
+    { label: "Medio Alto (C)", value: "C" },
+    { label: "Medio Bajo (D+)", value: "D+" },
+    { label: "Bajo (D)", value: "D" },
+    { label: "Precario (E)", value: "E" },
+    { label: "No tomar este dato para geolocalización", value: "null" }
   ];
 export const opnivesc = [
     {label: "Población de 3 a 5 años que no asiste a la escuela", value:"p3a5_noa"},
@@ -22,7 +23,7 @@ export const opnivesc = [
     {label: "Población de 18 a 24 años que asiste a la escuela", value:"p18a24a" },
     {label: "Población femenina de 18 a 24 años que asiste a la escuela", value:"p18a24a_f" },
     {label: "Población masculina de 18 a 24 años que asiste a la escuela", value:"p18a24a_m" },
-    {label: "No tomar este dato para geolocalización", value:"escolaridadNULL"}
+    { label: "No tomar este dato para geolocalización", value: "null" }
   ];
 
   export const opnsiteco = [
@@ -38,14 +39,14 @@ export const opnivesc = [
     { label: "Población desocupada de 12 años y más", value: "pdesocup" },
     { label: "Población femenina de 12 años y más desocupada", value: "pdesocup_f" },
     { label: "Población masculina de 12 años y más desocupada", value: "pdesocup_m" },
-    { label: "No tomar este dato para geolocalización", value: "situacioneconomicaNULL" }
+    { label: "No tomar este dato para geolocalización", value: "null" }
   ];
 
   export const opnsitcony = [
     { label: "Población de 12 años y más soltera o nunca unida", value: "p12ym_solt" },
     { label: "Población de 12 años y más que vive casada o unida", value: "p12ym_casa" },
     { label: "Población de 12 años y más que estuvo casada o unida", value: "p12ym_sepa" },
-    { label: "No tomar este dato para geolocalización", value: "situacionconyugalNULL" }
+    { label: "No tomar este dato para geolocalización", value: "null" }
   ];
 
   export const opnedad = [
@@ -88,7 +89,8 @@ export const opnivesc = [
     { label: "Población masculina de 18 a 24 años", value: "p_18a24_m" },
     { label: "Población de 60 años y más", value: "p_60ymas" },
     { label: "Población femenina de 60 años y más", value: "p_60ymas_f" },
-    { label: "Población masculina de 60 años y más", value: "p_60ymas_m" }
+    { label: "Población masculina de 60 años y más", value: "p_60ymas_m" },
+    { label: "No tomar este dato para geolocalización", value: "null" }
   ];
   
   export const opnlim = [
@@ -98,7 +100,7 @@ export const opnivesc = [
     { label: "Población de 15 años y más que es analfabeta", value: "p15ym_an" },
     { label: "Población femenina de 15 años y más que es analfabeta", value: "p15ym_an_f" },
     { label: "Población masculina de 15 años y más que es analfabeta", value: "p15ym_an_m" },
-    { label: "No tomar este dato para geolocalización", value: "limitacionNULL" }
+    { label: "No tomar este dato para geolocalización", value: "null" }
   ];
   
   export const opnsitescfin = [
@@ -121,7 +123,7 @@ export const opnivesc = [
     { label: "Población de 18 años y más que tiene educación posbásica", value: "p18ym_pb" },
     { label: "Población femenina de 18 años y más que tiene educación posbásica", value: "p18ym_pb_f" },
     { label: "Población masculina de 18 años y más que tiene educación posbásica", value: "p18ym_pb_m" },
-    { label: "No tomar este dato para geolocalización", value: "situacionescolarNULL" }
+    { label: "No tomar este dato para geolocalización", value: "null" }
   ];
   
   export const opnrel = [
@@ -129,7 +131,7 @@ export const opnivesc = [
     { label: "Población con grupo religioso protestante/cristiano evangélico de 12 años y más", value: "pro_crieva" },
     { label: "Población con otras religiones diferentes a las anteriores", value: "potras_rel" },
     { label: "Población sin religión o sin adscripción religiosa", value: "psin_relig" },
-    { label: "No tomar este dato para geolocalización", value: "religionNULL" }
+    { label: "No tomar este dato para geolocalización", value: "null" }
   ];
 
   

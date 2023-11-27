@@ -15,16 +15,41 @@ import styles from "../../Styles/styles";
 import MapView, { Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import Button from "../../components/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { textoLargo } from "../constants/textolargo";
 import Modal from "react-native-modal";
 import Slider from "@react-native-community/slider";
 import { useTheme } from "../context/ThemeContext";
 
-const Inputs_Geolocation = () => {
+const Inputs_Geolocation = ({route}) => {
   const { theme } = useTheme();
   const [sliderValue, setSliderValue] = useState(100);
   const [isModalVisible, setModalVisible] = useState(false);
+
+  const [agebData, setAgebData] = useState([]);
+  const [selnivsoc, setSelnivsoc] = useState(null);
+  const [selnivesc, setSelnivesc] = useState(null);
+  const [selsiteco, setSelsiteco] = useState(null);
+  const [selsitcony, setSelsitcony] = useState(null);
+  const [seledad, setSeledad] = useState(null);
+  const [sellim, setSellim] = useState(null);
+  const [selsitescfin, setSelsitescfin] = useState(null);
+  const [selrel, setSelrel] = useState(null);
+
+  useEffect(() => {
+    // Cuando el componente se monta, actualiza el estado con los datos recibidos
+    if (route.params) {
+      setAgebData(route.params.agebData);
+      setSelnivsoc(route.params.selnivsoc);
+      setSelnivesc(route.params.selnivesc);
+      setSelsiteco(route.params.selsiteco);
+      setSelsitcony(route.params.selsitcony);
+      setSeledad(route.params.seledad);
+      setSellim(route.params.sellim);
+      setSelsitescfin(route.params.selsitescfin);
+      setSelrel(route.params.selrel);
+    }
+  }, [route.params]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -144,7 +169,7 @@ const Inputs_Geolocation = () => {
                     }
                   >
                     <TextInput
-                      placeholder="valor"
+                      placeholder={selnivsoc}
                       placeholderTextColor={
                         theme === "light" ? COLORS.buttonprimary : "white"
                       }
@@ -175,7 +200,7 @@ const Inputs_Geolocation = () => {
                     }
                   >
                     <TextInput
-                      placeholder="valor"
+                      placeholder={seledad}
                       placeholderTextColor={
                         theme === "light" ? COLORS.buttonprimary : "white"
                       }
@@ -206,7 +231,7 @@ const Inputs_Geolocation = () => {
                     }
                   >
                     <TextInput
-                      placeholder="valor"
+                      placeholder={selnivesc}
                       placeholderTextColor={
                         theme === "light" ? COLORS.buttonprimary : "white"
                       }
@@ -237,7 +262,7 @@ const Inputs_Geolocation = () => {
                     }
                   >
                     <TextInput
-                      placeholder="valor"
+                      placeholder={sellim}
                       placeholderTextColor={
                         theme === "light" ? COLORS.buttonprimary : "white"
                       }
@@ -268,7 +293,7 @@ const Inputs_Geolocation = () => {
                     }
                   >
                     <TextInput
-                      placeholder="valor"
+                      placeholder={selsiteco}
                       placeholderTextColor={
                         theme === "light" ? COLORS.buttonprimary : "white"
                       }
@@ -299,7 +324,7 @@ const Inputs_Geolocation = () => {
                     }
                   >
                     <TextInput
-                      placeholder="valor"
+                      placeholder={selsitescfin}
                       placeholderTextColor={
                         theme === "light" ? COLORS.buttonprimary : "white"
                       }
@@ -330,7 +355,7 @@ const Inputs_Geolocation = () => {
                     }
                   >
                     <TextInput
-                      placeholder="valor"
+                      placeholder={selsitcony}
                       placeholderTextColor={
                         theme === "light" ? COLORS.buttonprimary : "white"
                       }
@@ -361,7 +386,7 @@ const Inputs_Geolocation = () => {
                     }
                   >
                     <TextInput
-                      placeholder="valor"
+                      placeholder={selrel}
                       placeholderTextColor={
                         theme === "light" ? COLORS.buttonprimary : "white"
                       }

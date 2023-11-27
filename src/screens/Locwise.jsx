@@ -203,7 +203,7 @@ const Locwise = () => {
                 >
                   Ingresa la localizacion de tu comercio.
                 </Text>
-                <Pressable onPress={() => navigation.navigate("Inputs")}>
+                <Pressable onPress={() => navigation.navigate("Inputs", {agebData})}>
                   <Text
                     style={
                       theme === "light"

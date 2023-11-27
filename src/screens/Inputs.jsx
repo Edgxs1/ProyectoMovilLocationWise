@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Alert
 } from "react-native";
 import COLORS from "../constants/colors";
 import styles from "../../Styles/styles";
@@ -23,26 +24,118 @@ import {
   opnrel,
 } from "../constants/opciones";
 
-const Inputs = () => {
+const Inputs = ({route}) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const [selnivsoc, setSelnivsoc] = useState("");
-  const [selnivsoclabel, setSelnivsoclabel] = useState("");
-  const [selnivesc, setSelnivesc] = useState("");
-  const [selsiteco, setSelsiteco] = useState("");
-  const [selsitcony, setSelsitcony] = useState("");
-  const [seledad, setSeledad] = useState("");
-  const [sellim, setSellim] = useState("");
-  const [selsitescfin, setSelsitescfin] = useState("");
-  const [selrel, setSelrel] = useState("");
 
+  const [agebData, setAgebData] = useState([]);
 
-  const getLabelFromValue = (value) => {
+  const [selnivsoc, setSelnivsoc] = useState("selecciona");
+  const [selnivesc, setSelnivesc] = useState("selecciona");
+  const [selsiteco, setSelsiteco] = useState("selecciona");
+  const [selsitcony, setSelsitcony] = useState("selecciona");
+  const [seledad, setSeledad] = useState("selecciona");
+  const [sellim, setSellim] = useState("selecciona");
+  const [selsitescfin, setSelsitescfin] = useState("selecciona");
+  const [selrel, setSelrel] = useState("selecciona");
+
+  const [selnivsoclabel, setSelnivsoclabel] = useState(null);
+  const [selnivesclabel, setSelnivesclabel] = useState(null);
+  const [selsitecolabel, setSelsitecolabel] = useState(null);
+  const [selsitconylabel, setSelsitconylabel] = useState(null);
+  const [seledadlabel, setSeledadlabel] = useState(null);
+  const [sellimlabel, setSellimlabel] = useState(null);
+  const [selsitescfinlabel, setSelsitescfinlabel] = useState(null);
+  const [selrellabel, setSelrellabel] = useState(null);
+
+  useEffect(() => {
+    // Cuando el componente se monta, actualiza el estado con los datos recibidos
+    if (route.params) {
+      setAgebData(route.params.agebData);
+    }
+  }, [route.params]);
+
+  const getLabelFromnivelsoc = (value) => {
     const option = opnivelso.find((option) => option.value === value);
     //console.log("option", selnivsoclabel);
-    setSelnivsoc(option.value);
     //console.log("option", selnivsoc);
-    return option ? option.label : ""; // Devuelve el label si se encuentra, de lo contrario, cadena vacía
+    setSelnivsoc(option.value);
+    return option ? option.label : "";
+  };
+  const getLabelFromnivesc = (value) => {
+    const option = opnivesc.find((option) => option.value === value);
+    //console.log("option", selnivesclabel);
+    setSelnivesc(option.value);
+    //console.log("option", selnivesc);
+    return option ? option.label : "";
+  }
+  const getLabelFromsiteco = (value) => {
+    const option = opnsiteco.find((option) => option.value === value);
+    //console.log("option", selsitecolabel);
+    setSelsiteco(option.value);
+    //console.log("option", selsiteco);
+    return option ? option.label : "";
+  }
+  const getLabelFromsitcony = (value) => {
+    const option = opnsitcony.find((option) => option.value === value);
+    //console.log("option", selsitconylabel);
+    setSelsitcony(option.value);
+    //console.log("option", selsitcony);
+    return option ? option.label : "";
+  }
+  const getLabelFromedad = (value) => {
+    const option = opnedad.find((option) => option.value === value);
+    //console.log("option", seledadlabel);
+    setSeledad(option.value);
+    //console.log("option", seledad);
+    return option ? option.label : "";
+  }
+  const getLabelFromlim = (value) => {
+    const option = opnlim.find((option) => option.value === value);
+    //console.log("option", sellimlabel);
+    setSellim(option.value);
+    //console.log("option", sellim);
+    return option ? option.label : "";
+  }
+  const getLabelFromsitescfin = (value) => {
+    const option = opnsitescfin.find((option) => option.value === value);
+    //console.log("option", selsitescfinlabel);
+    setSelsitescfin(option.value);
+    //console.log("option", selsitescfin);
+    return option ? option.label : "";
+  }
+  const getLabelFromrel = (value) => {
+    const option = opnrel.find((option) => option.value === value);
+    //console.log("option", selrellabel);
+    setSelrel(option.value);
+    //console.log("option", selrel);
+    return option ? option.label : "";
+  }
+  const handleGeolocalizePress = () => {
+    if (
+      selnivsoc === "selecciona" ||
+      selnivesc === "selecciona" ||
+      selsiteco === "selecciona" ||
+      selsitcony === "selecciona" ||
+      seledad === "selecciona" ||
+      sellim === "selecciona" ||
+      selsitescfin === "selecciona" ||
+      selrel === "selecciona"
+    ) {
+      Alert.alert("Por favor ingrese todos los datos");
+    } else {
+      navigation.navigate("Inputs_Geolocation", {
+        selnivsoc,
+        selnivesc,
+        selsiteco,
+        selsitcony,
+        seledad,
+        sellim,
+        selsitescfin,
+        selrel,
+        agebData,
+      });
+    }
   };
   return (
     <View
@@ -83,7 +176,7 @@ const Inputs = () => {
                     <CustomPicker
                       selectedValue={selnivsoclabel}
                       onValueChange={(itemValue, itemIndex) => {
-                        setSelnivsoclabel(getLabelFromValue(itemValue));
+                        setSelnivsoclabel(getLabelFromnivelsoc(itemValue));
                       }}
                       options={opnivelso}
                       placeholder="Selecciona una opción"
@@ -100,10 +193,10 @@ const Inputs = () => {
                       Nivel de escolaridad actual:
                     </Text>
                     <CustomPicker
-                      selectedValue={selnivesc}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setSelnivesc(itemValue)
-                      }
+                      selectedValue={selnivesclabel}
+                      onValueChange={(itemValue, itemIndex) => {
+                        setSelnivesclabel(getLabelFromnivesc(itemValue));
+                      }}
                       options={opnivesc}
                       placeholder="Selecciona una opción"
                     />
@@ -119,10 +212,10 @@ const Inputs = () => {
                       Situacion economica:
                     </Text>
                     <CustomPicker
-                      selectedValue={selsiteco}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setSelsiteco(itemValue)
-                      }
+                      selectedValue={selsitecolabel}
+                      onValueChange={(itemValue, itemIndex) => {
+                        setSelsitecolabel(getLabelFromsiteco(itemValue));
+                      }}
                       options={opnsiteco}
                       placeholder="Selecciona una opción"
                     />
@@ -138,10 +231,10 @@ const Inputs = () => {
                       Situacion conyugal
                     </Text>
                     <CustomPicker
-                      selectedValue={selsitcony}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setSelsitcony(itemValue)
-                      }
+                      selectedValue={selsitconylabel}
+                      onValueChange={(itemValue, itemIndex) => {
+                        setSelsitconylabel(getLabelFromsitcony(itemValue));
+                      }}
                       options={opnsitcony}
                       placeholder="Selecciona una opción"
                     />
@@ -157,10 +250,10 @@ const Inputs = () => {
                       Edad:
                     </Text>
                     <CustomPicker
-                      selectedValue={seledad}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setSeledad(itemValue)
-                      }
+                      selectedValue={seledadlabel}
+                      onValueChange={(itemValue, itemIndex) => {
+                        setSeledadlabel(getLabelFromedad(itemValue));
+                      }}
                       options={opnedad}
                       placeholder="Selecciona una opción"
                     />
@@ -176,10 +269,10 @@ const Inputs = () => {
                       Limitacion:
                     </Text>
                     <CustomPicker
-                      selectedValue={sellim}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setSellim(itemValue)
-                      }
+                      selectedValue={sellimlabel}
+                      onValueChange={(itemValue, itemIndex) => {
+                        setSellimlabel(getLabelFromlim(itemValue));
+                      }}
                       options={opnlim}
                       placeholder="Selecciona una opción"
                     />
@@ -195,10 +288,10 @@ const Inputs = () => {
                       Situacion escolar final:
                     </Text>
                     <CustomPicker
-                      selectedValue={selsitescfin}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setSelsitescfin(itemValue)
-                      }
+                      selectedValue={selsitescfinlabel}
+                      onValueChange={(itemValue, itemIndex) => {
+                        setSelsitescfinlabel(getLabelFromsitescfin(itemValue));
+                      }}
                       options={opnsitescfin}
                       placeholder="Selecciona una opción"
                     />
@@ -214,10 +307,10 @@ const Inputs = () => {
                       Religion:
                     </Text>
                     <CustomPicker
-                      selectedValue={selrel}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setSelrel(itemValue)
-                      }
+                      selectedValue={selrellabel}
+                      onValueChange={(itemValue, itemIndex) => {
+                        setSelrellabel(getLabelFromrel(itemValue));
+                      }}
                       options={opnrel}
                       placeholder="Selecciona una opción"
                     />
@@ -228,7 +321,7 @@ const Inputs = () => {
             <View style={{ width: "85%", alignSelf: "center" }}>
               <Button
                 title="Geolocalizar"
-                onPress={() => navigation.navigate("Inputs_Geolocation")}
+                onPress={handleGeolocalizePress}
                 style={{ height: 50 }}
               />
             </View>
