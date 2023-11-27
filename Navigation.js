@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import BottomTabs from './src/containers/BottomTabs';
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-
 //screens
-import  Signup  from './src/screens/Signup';
-import  Welcome  from './src/screens/Welcome';
+import Signup from './src/screens/Signup';
+import Welcome from './src/screens/Welcome';
 
 
 import * as Font from "expo-font";
 
 const SolutionStack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
 const Navigation = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -40,33 +32,33 @@ const Navigation = () => {
   if (!fontsLoaded) {
     return null;
   }
-  
+
   return (
     <SolutionStack.Navigator
-        initialRouteName='Welcome'
-      >
-        <SolutionStack.Screen
-          name="Welcome"
-          component={Welcome}
-          options={{
-            headerShown: false
-          }}
-        />
-        <SolutionStack.Screen
-          name="Signup"
-          component={Signup}
-          options={{
-            headerShown: false
-          }}
-        />
-        <SolutionStack.Screen
-          name="Navigation"
-          component={BottomTabs}
-          options={{
-            headerShown: false
-          }}
-        />
-      </SolutionStack.Navigator>
+      initialRouteName='Welcome'
+    >
+      <SolutionStack.Screen
+        name="Welcome"
+        component={Welcome}
+        options={{
+          headerShown: false
+        }}
+      />
+      <SolutionStack.Screen
+        name="Signup"
+        component={Signup}
+        options={{
+          headerShown: false
+        }}
+      />
+      <SolutionStack.Screen
+        name="Navigation"
+        component={BottomTabs}
+        options={{
+          headerShown: false
+        }}
+      />
+    </SolutionStack.Navigator>
   );
 };
 

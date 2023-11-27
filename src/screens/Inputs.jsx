@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  TextInput,
   ScrollView,
-  TouchableOpacity,
   Alert
 } from "react-native";
 import COLORS from "../constants/colors";

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
-import { useFonts } from "expo-font";
 import styles from "../../Styles/styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../context/ThemeContext";
