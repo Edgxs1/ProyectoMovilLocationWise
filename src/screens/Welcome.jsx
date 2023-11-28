@@ -31,12 +31,12 @@ const Welcome = ({ navigation }) => {
 
   async function getAllUsers() {
     const users_endpoint = `http://${hostIP}:3000/locationwise/v1/users/all`
-    console.log("Ip:", hostIP);
+    //console.log("Ip:", hostIP);
     return fetch(users_endpoint)
       .then((response) => response.json())
       .then((json) => {
-        console.log("\nAPI fetched: " + users_endpoint);
-        console.log("\nJson returned: " + json);
+        //console.log("\nAPI fetched: " + users_endpoint);
+        //console.log("\nJson returned: " + json);
         return json;
       })
       .catch((error) => {
@@ -46,7 +46,7 @@ const Welcome = ({ navigation }) => {
 
   async function authLogin(email, password) {
     const login_endpoint = `http://${hostIP}:3000/locationwise/v1/auth/login/${email}/${password}`;
-    console.log("Ip:", hostIP);
+    //console.log("Ip:", hostIP);
     console.log("Fetching: " + login_endpoint);
 
     try {
@@ -60,11 +60,11 @@ const Welcome = ({ navigation }) => {
         const res = await response.text();
         const message = JSON.parse(res).message;
         const userId = JSON.parse(res).userId;
-        console.log("res: " + res);
-        console.log("message: " + message);
-        console.log("userId: " + userId);
+        //console.log("res: " + res);
+        //console.log("message: " + message);
+        //console.log("userId: " + userId);
         if (message == "Usuario validado.") {
-          console.log("Usuario validado.");
+          //console.log("Usuario validado.");
           return { success: true, userId };
         } else {
           console.log('Login failed');
@@ -88,18 +88,18 @@ const Welcome = ({ navigation }) => {
       Alert.alert("Campos vacíos", "Por favor llena todos los campos");
     } else {
       try {
-        console.log("Correo electrónico:", email);
-        console.log("Password:", password);
-        console.log("pre data, fetching . . .");
+        //console.log("Correo electrónico:", email);
+        //console.log("Password:", password);
+        //console.log("pre data, fetching . . .");
         const data = await authLogin(email, password);
-        console.log("data: " + data);
+        //console.log("data: " + data);
         if (data && data.success && data != null && data != undefined) {
-          console.log("post data");
-          console.log("data: " + JSON.stringify(data));
-          console.log("userId: " + data.userId);
+          //console.log("post data");
+          //console.log("data: " + JSON.stringify(data));
+          //console.log("userId: " + data.userId);
           try {
             await AsyncStorage.setItem('userId', data.userId.toString());
-            console.log('User ID saved in AsyncStorage');
+            //console.log('User ID saved in AsyncStorage');
             navigation.navigate("Navigation");
           } catch (error) {
             console.error('Error saving user ID in AsyncStorage:', error);

@@ -54,8 +54,6 @@ const Locwise = () => {
       const response = await fetch(agebs_endpoint);
       const json = await response.json();
       console.log("API fetched:", agebs_endpoint);
-      //console.log("Data from API:", json); // Agrega este log
-      //console.log("\nJson returned:", JSON.stringify(json, null, 2));
       return json;
     } catch (error) {
       console.error("Error fetching AGEBS data:", error);
@@ -98,7 +96,7 @@ const Locwise = () => {
 
   const getAgebDataBycvegeo = async (cvegeo) => {
     const ageb_endpoint = `http://${hostIP}:3000/locationwise/v1/geocode-settlement/${cvegeo}`;
-    console.log("Ip:", hostIP);
+    //console.log("Ip:", hostIP);
     console.log("Fetching: " + ageb_endpoint);
     try {
       const response = await fetch(ageb_endpoint, {

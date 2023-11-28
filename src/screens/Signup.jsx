@@ -35,9 +35,9 @@ const Signup = ({ navigation }) => {
 
   async function addUser(username, email, password) {
     const auth_endpoint = `http://${hostIP}:3000/locationwise/v1/users/add`;
-    console.log("Ip:", hostIP);
+    //console.log("Ip:", hostIP);
     const data = { usr_username: username, usr_email: email, usr_pass: password };
-    console.log("\ndata: " + JSON.stringify(data) + "\n");
+    //console.log("\ndata: " + JSON.stringify(data) + "\n");
     console.log("Fetching: " + auth_endpoint);
 
     try {
@@ -51,7 +51,7 @@ const Signup = ({ navigation }) => {
       if (response.ok) {
         const res = await response.text();
         if (res === 'Ese email ya existe.') {
-          console.log("Ese email ya existe.");
+          //console.log("Ese email ya existe.");
           return false;
         } else {
           console.log("Usuario creado.");
@@ -77,20 +77,20 @@ const Signup = ({ navigation }) => {
       Alert.alert("Campos vacíos", "Por favor llena todos los campos");
     } else if (password == password2) {
       try {
-        console.log("Nombre de usuario:", name);
-        console.log("Correo electrónico:", email);
-        console.log("Password:", password);
-        console.log("pre data");
+        //console.log("Nombre de usuario:", name);
+        //console.log("Correo electrónico:", email);
+        //console.log("Password:", password);
+        //console.log("pre data");
         const data = await addUser(name, email, password);
-        console.log("data: " + data);
+        //console.log("data: " + data);
         if (data && data != null && data != undefined && data != false) {
-          console.log("post data");
-          console.log(data);
+          //console.log("post data");
+          //console.log(data);
           navigation.navigate("Welcome");
         } else {
           Alert.alert("Error", "Algo salió mal");
         }
-        console.log(data);
+        //console.log(data);
       } catch (error) {
         console.error("Error in handleSendData:", error);
       }

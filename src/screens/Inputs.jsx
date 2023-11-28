@@ -55,58 +55,42 @@ const Inputs = ({route}) => {
 
   const getLabelFromnivelsoc = (value) => {
     const option = opnivelso.find((option) => option.value === value);
-    //console.log("option", selnivsoclabel);
-    //console.log("option", selnivsoc);
     setSelnivsoc(option.value);
     return option ? option.label : "";
   };
   const getLabelFromnivesc = (value) => {
     const option = opnivesc.find((option) => option.value === value);
-    //console.log("option", selnivesclabel);
     setSelnivesc(option.value);
-    //console.log("option", selnivesc);
     return option ? option.label : "";
   }
   const getLabelFromsiteco = (value) => {
     const option = opnsiteco.find((option) => option.value === value);
-    //console.log("option", selsitecolabel);
     setSelsiteco(option.value);
-    //console.log("option", selsiteco);
     return option ? option.label : "";
   }
   const getLabelFromsitcony = (value) => {
     const option = opnsitcony.find((option) => option.value === value);
-    //console.log("option", selsitconylabel);
     setSelsitcony(option.value);
-    //console.log("option", selsitcony);
     return option ? option.label : "";
   }
   const getLabelFromedad = (value) => {
     const option = opnedad.find((option) => option.value === value);
-    //console.log("option", seledadlabel);
     setSeledad(option.value);
-    //console.log("option", seledad);
     return option ? option.label : "";
   }
   const getLabelFromlim = (value) => {
     const option = opnlim.find((option) => option.value === value);
-    //console.log("option", sellimlabel);
     setSellim(option.value);
-    //console.log("option", sellim);
     return option ? option.label : "";
   }
   const getLabelFromsitescfin = (value) => {
     const option = opnsitescfin.find((option) => option.value === value);
-    //console.log("option", selsitescfinlabel);
     setSelsitescfin(option.value);
-    //console.log("option", selsitescfin);
     return option ? option.label : "";
   }
   const getLabelFromrel = (value) => {
     const option = opnrel.find((option) => option.value === value);
-    //console.log("option", selrellabel);
     setSelrel(option.value);
-    //console.log("option", selrel);
     return option ? option.label : "";
   }
   const handleGeolocalizePress = () => {

@@ -57,7 +57,7 @@ const Perfil = () => {
 
       if (storedUserId) {
         const userId = parseInt(storedUserId, 10);
-        console.log('Retrieved User ID from AsyncStorage:', userId);
+        //console.log('Retrieved User ID from AsyncStorage:', userId);
         return userId;
       } else {
         console.log('User ID not found in AsyncStorage');
@@ -69,7 +69,7 @@ const Perfil = () => {
 
   async function getUserDataByID(id) {
     const user_endpoint = `http://${hostIP}:3000/locationwise/v1/users/data/${id}`;
-    console.log("Ip:", hostIP);
+    //console.log("Ip:", hostIP);
     console.log("Fetching: " + user_endpoint);
     try {
       const response = await fetch(user_endpoint, {
@@ -79,7 +79,7 @@ const Perfil = () => {
 
       if (response.ok) {
         const res = await response.json();
-        console.log("User data fetched: " + JSON.stringify(res));
+        //console.log("User data fetched: " + JSON.stringify(res));
         return res;
       } else {
         console.log("Algo salió mal.");
@@ -93,9 +93,9 @@ const Perfil = () => {
 
   async function updateUserByID(id, username, email, password) {
     const updateUser_endpoint = `http://${hostIP}:3000/locationwise/v1/users/update/${id}`;
-    console.log("Ip:", hostIP);
+    //console.log("Ip:", hostIP);
     const data = { usr_username: username, usr_email: email, usr_pass: password };
-    console.log("\ndata: " + JSON.stringify(data) + "\n");
+    //console.log("\ndata: " + JSON.stringify(data) + "\n");
     console.log("Fetching: " + updateUser_endpoint);
     try {
       const response = await fetch(updateUser_endpoint, {
@@ -108,7 +108,7 @@ const Perfil = () => {
       })
       if (response.ok) {
         if (response.status === 200) {
-          console.log("Usuario actualizado.");
+          //console.log("Usuario actualizado.");
           return true;
         } else {
           console.log("Algo salió mal.");
@@ -130,11 +130,11 @@ const Perfil = () => {
     if (name === "" || email === "" || password === "") {
       Alert.alert("Campos vacíos", "Por favor llena todos los campos");
     } else {
-      console.log("Nombre de usuario:", name);
-      console.log("Correo electrónico:", email);
-      console.log("Password:", password);
+      //console.log("Nombre de usuario:", name);
+      //console.log("Correo electrónico:", email);
+      //console.log("Password:", password);
       const data = await updateUserByID(userId, name, email, password);
-      console.log("Data: " + data);
+      //console.log("Data: " + data);
       if (data && data !== null && data !== undefined) {
         Alert.alert("Usuario actualizado", "Se han actualizado tus datos");
         navigation.navigate("Perfil");
@@ -145,7 +145,7 @@ const Perfil = () => {
   };
 
   async function deleteUserByID(id) {
-    console.log("Ip:", hostIP);
+    //console.log("Ip:", hostIP);
     const deleteUser_endpoint = `http://${hostIP}:3000/locationwise/v1/users/delete/${id}`;
     console.log("Fetching: " + deleteUser_endpoint);
     try {

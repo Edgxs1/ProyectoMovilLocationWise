@@ -1,16 +1,16 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import React, {FC, useEffect} from 'react';
+import { Pressable, StyleSheet, Text } from "react-native";
+import React, { FC, useEffect } from "react";
 import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
-import Feather from 'react-native-vector-icons/Feather';
-import {getPathXCenterByIndex} from '../../src/utils/Path';
-import usePath from '../../src/hooks/usePath';
-import {SCREEN_WIDTH} from '../../src/constants/Screen';
-import COLORS from '../../src/constants/colors';
+} from "react-native-reanimated";
+import Feather from "react-native-vector-icons/Feather";
+import { getPathXCenterByIndex } from "../../src/utils/Path";
+import usePath from "../../src/hooks/usePath";
+import { SCREEN_WIDTH } from "../../src/constants/Screen";
+import COLORS from "../../src/constants/colors";
 import { useTheme } from "../../src/context/ThemeContext";
 export type TabProps = {
   label: string;
@@ -30,7 +30,7 @@ const TabItem: FC<TabProps> = ({
   onTabPress,
 }) => {
   const { theme } = useTheme();
-  const { curvedPaths} = usePath(); // Ajusta según tu implementación
+  const { curvedPaths } = usePath(); // Ajusta según tu implementación
   const animatedActiveIndex = useSharedValue(activeIndex);
   const iconPosition = getPathXCenterByIndex(curvedPaths, index);
   const labelPosition = getPathXCenterByIndex(curvedPaths, index);
@@ -60,19 +60,23 @@ const TabItem: FC<TabProps> = ({
 
   const iconColor = useSharedValue(
     activeIndex === index + 1
-      ? theme === 'light'
-        ? '#3282B8' // Color light
-        : '#BBE1FA' // Color dark
-      : 'rgba(128, 128, 128, 0.8)',
+      ? theme === "light"
+        ? "#3282B8" // Color light
+        : "#BBE1FA" // Color dark
+      : "rgba(128, 128, 128, 0.8)"
   );
 
   // Adjust Icon color for this first render
   useEffect(() => {
     animatedActiveIndex.value = activeIndex;
     if (activeIndex === index + 1) {
-      iconColor.value = withTiming(theme === 'light' ? COLORS.buttonprimary : 'white');//contorno del seleccionado
+      iconColor.value = withTiming(
+        theme === "light" ? COLORS.buttonprimary : "white"
+      ); //contorno del seleccionado
     } else {
-      iconColor.value = withTiming(theme === 'light' ? 'rgba(128,128,128,0.8)' : 'grey');//fondo de botones desactivados
+      iconColor.value = withTiming(
+        theme === "light" ? "rgba(128,128,128,0.8)" : "grey"
+      ); //fondo de botones desactivados
     }
   }, [activeIndex, theme]);
 
@@ -86,12 +90,25 @@ const TabItem: FC<TabProps> = ({
         <Pressable
           testID={`tab${label}`}
           hitSlop={{ top: 30, bottom: 30, left: 50, right: 50 }}
-          onPress={onTabPress}>
-          <AnimatedIcon name={icon} size={25} animatedProps={animatedIconProps} />
+          onPress={onTabPress}
+        >
+          <AnimatedIcon
+            name={icon}
+            size={25}
+            animatedProps={animatedIconProps}
+          />
         </Pressable>
       </Animated.View>
       <Animated.View style={[labelContainerStyle, styles.labelContainer]}>
-        <Text style={theme === "light" ? styles.label : { ...styles.label, color: 'white' }}>{label}</Text>
+        <Text
+          style={
+            theme === "light"
+              ? styles.label
+              : { ...styles.label, color: "white" }
+          }
+        >
+          {label}
+        </Text>
       </Animated.View>
     </>
   );
@@ -101,8 +118,8 @@ export default TabItem;
 
 const styles = StyleSheet.create({
   labelContainer: {
-    position: 'absolute',
-    alignItems: 'center',
+    position: "absolute",
+    alignItems: "center",
     width: LABEL_WIDTH,
   },
   label: {

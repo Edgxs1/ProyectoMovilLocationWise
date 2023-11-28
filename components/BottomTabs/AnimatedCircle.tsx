@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { FC } from 'react';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useTheme } from '../../src/context/ThemeContext';
+import { StyleSheet } from "react-native";
+import React, { FC } from "react";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { useTheme } from "../../src/context/ThemeContext";
 
 type CircleProps = {
   circleX: Animated.SharedValue<number>;
@@ -16,7 +16,7 @@ const AnimatedCircle: FC<CircleProps> = ({ circleX }) => {
   const circleContainerStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: circleX.value - circleContainerSize / 2 }],
-      backgroundColor: theme === 'light' ? '#F7FBFC' : '#252A34', // Ajusta los colores según tu tema
+      backgroundColor: theme === "light" ? "#F7FBFC" : "#252A34", // Ajusta los colores según tu tema
     };
   }, [theme]);
 
@@ -27,12 +27,12 @@ export default AnimatedCircle;
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
+    position: "absolute",
     top: -circleContainerSize / 1.1,
     width: circleContainerSize,
     borderRadius: circleContainerSize,
     height: circleContainerSize,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

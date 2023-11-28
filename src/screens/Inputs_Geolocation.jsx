@@ -4,15 +4,12 @@ import {
   Text,
   TextInput,
   ScrollView,
-  ImageBackground,
   Alert,
   SafeAreaView,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
-import { useFonts } from "expo-font";
 import styles from "../../Styles/styles";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polygon, Callout } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import Button from "../../components/Button";
 import { useState, useEffect } from "react";
@@ -20,11 +17,14 @@ import { textoLargo } from "../constants/textolargo";
 import Modal from "react-native-modal";
 import Slider from "@react-native-community/slider";
 import { useTheme } from "../context/ThemeContext";
+import { hostIP } from "@env";
+import * as geolib from "geolib";
 
-const Inputs_Geolocation = ({route}) => {
+const Inputs_Geolocation = ({ route }) => {
   const { theme } = useTheme();
   const [sliderValue, setSliderValue] = useState(100);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [markerCoordinate, setMarkerCoordinate] = useState(null);
 
   const [agebData, setAgebData] = useState([]);
   const [selnivsoc, setSelnivsoc] = useState(null);
@@ -35,6 +35,16 @@ const Inputs_Geolocation = ({route}) => {
   const [sellim, setSellim] = useState(null);
   const [selsitescfin, setSelsitescfin] = useState(null);
   const [selrel, setSelrel] = useState(null);
+  const [limitedData, setLimitedData] = useState(null);
+  const [pobtot1, setPobtot1] = useState(null);
+  const [pobmas1, setPobmas1] = useState(null);
+  const [pobfem1, setPobfem1] = useState(null);
+  const [nivsoc1, setNivsoc1] = useState(null);
+  const [gradoesc1, setGradoesc1] = useState(null);
+  const [gradoescfem1, setGradoescfem1] = useState(null);
+  const [gradoescmas1, setGradoescmas1] = useState(null);
+  const [edprom1, setEdprom1] = useState(null);
+  const [selectedCvegeo1, setSelectedCvegeo1] = useState(null);
 
   useEffect(() => {
     // Cuando el componente se monta, actualiza el estado con los datos recibidos
@@ -48,8 +58,163 @@ const Inputs_Geolocation = ({route}) => {
       setSellim(route.params.sellim);
       setSelsitescfin(route.params.selsitescfin);
       setSelrel(route.params.selrel);
+      //console.log(limitedData)
     }
   }, [route.params]);
+
+  const handlePressCustom = () => {
+    if (sliderValue === 0) {
+      Alert.alert("Mueve el slider para seleccionar un numero de zonas");
+    } else {
+      Alert.alert(
+        `${sliderValue}%`,
+        "¿Estás seguro de las zonas a geolocalizar? ",
+        [
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          {
+            text: "Aceptar",
+            onPress: () => {
+              getCustomAgeb(
+                selnivsoc,
+                seledad,
+                selnivesc,
+                selsiteco,
+                selsitescfin,
+                selsitcony,
+                selrel,
+                sellim,
+                sliderValue
+              );
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  };
+
+  const getCustomAgeb = async (
+    nivsoc,
+    edad,
+    esc,
+    siteco,
+    sitesc,
+    sitcony,
+    rel,
+    lim,
+    zones
+  ) => {
+    // Verifica el valor de similitud...
+    if (zones === 0) {
+      Alert.alert("Mueve el slider para seleccionar un numero de zonas");
+    } else {
+      const custom_endpoint =
+        `http://${hostIP}:3000/locationwise/v1/customers-inputs/customers-cvegeos/` +
+        `${nivsoc}/${edad}/${esc}/${siteco}/${sitesc}/${sitcony}/${rel}/${lim}`;
+
+      try {
+        const response = await fetch(custom_endpoint);
+        //console.log("Fetching: " + custom_endpoint);
+        const data = await response.json();
+
+        //console.log("Data:", data);
+
+        // Limita la cantidad de zonas según el valor de zones
+        const limitedData = data.slice(0, zones);
+        setLimitedData(limitedData);
+
+        // Utiliza Alert para mostrar mensajes...
+        if (limitedData && limitedData.length > 0) {
+          Alert.alert(
+            "Se encontraron zonas similares",
+            JSON.stringify(limitedData)
+          );
+        } else {
+          console.log(
+            "La respuesta está vacía o no tiene el formato esperado."
+          );
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Alert.alert("Error", "Hubo un error.", [{ text: "OK" }]);
+      }
+    }
+  };
+
+  const handleMapPress = async (event) => {
+    const { coordinate } = event.nativeEvent;
+    setMarkerCoordinate(coordinate);
+    const selectedAgebData = findAgebDataByCoordinate(coordinate);
+    if (selectedAgebData) {
+      setSelectedCvegeo1(selectedAgebData.cvegeo);
+
+      try {
+        // Load AGEB data asynchronously
+        await getAgebDataBycvegeo(selectedAgebData.cvegeo);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    }
+  };
+
+  const findAgebDataByCoordinate = (coordinate) => {
+    const selectedAgebData = agebData.find((agebData) => {
+      const stAsGeoJSON = JSON.parse(agebData.st_asgeojson);
+      const polygonCoordinates = stAsGeoJSON.coordinates[0][0].map(
+        ([longitude, latitude]) => ({ latitude, longitude })
+      );
+
+      const isPointInside = geolib.isPointInPolygon(
+        coordinate,
+        polygonCoordinates
+      );
+
+      return isPointInside;
+    });
+
+    return selectedAgebData || null;
+  };
+
+  const getAgebDataBycvegeo = async (cvegeo) => {
+    const ageb_endpoint = `http://${hostIP}:3000/locationwise/v1/geocode-settlement/${cvegeo}`;
+    //console.log("Ip:", hostIP);
+    console.log("Fetching: " + ageb_endpoint);
+    try {
+      const response = await fetch(ageb_endpoint, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (response.ok) {
+        const res = await response.json();
+
+        //console.log("AGEB data fetched: " + JSON.stringify(res));
+        //return res;
+        if (res && res.length > 0) {
+          const agebbycvegeo = res[0];
+          setPobtot1(agebbycvegeo?.pobtot);
+          setPobmas1(agebbycvegeo?.pobmas);
+          setPobfem1(agebbycvegeo?.pobfem);
+          setNivsoc1(agebbycvegeo?.lw_economiapred);
+          setGradoesc1(agebbycvegeo?.graproes);
+          setGradoescfem1(agebbycvegeo?.graproes_f);
+          setGradoescmas1(agebbycvegeo?.graproes_m);
+          setEdprom1(agebbycvegeo?.lw_edprom);
+        } else {
+          console.log(
+            "La respuesta está vacía o no tiene el formato esperado."
+          );
+        }
+      } else {
+        console.log("AGEB data not found");
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -422,7 +587,7 @@ const Inputs_Geolocation = ({route}) => {
                           <Text
                             style={
                               theme === "light"
-                                ? {...styles.tittle1, color: "white"}
+                                ? { ...styles.tittle1, color: "white" }
                                 : { ...styles.tittle1, color: "white" }
                             }
                           >
@@ -432,7 +597,7 @@ const Inputs_Geolocation = ({route}) => {
                           <Text
                             style={
                               theme === "light"
-                                ? {...styles.textmodal, color: "white"}
+                                ? { ...styles.textmodal, color: "white" }
                                 : { ...styles.textmodal, color: "white" }
                             }
                           >
@@ -479,7 +644,7 @@ const Inputs_Geolocation = ({route}) => {
                   <View style={{ width: "60%", alignSelf: "center" }}>
                     <Button
                       title="Desplegar zonas"
-                      onPress={() => console.log("Desplegar zonas")}
+                      onPress={handlePressCustom}
                       style={{ height: 40 }}
                     />
                   </View>
@@ -487,209 +652,56 @@ const Inputs_Geolocation = ({route}) => {
               </View>
             </View>
           </View>
-          <View>
-            <Text
-              style={{
-                color: theme === "light" ? "black" : "white",
-                marginTop: 35,
-                fontSize: 20,
-                paddingLeft: 15,
-                textDecorationLine: "underline",
-              }}
-            >
-              AGEBS CON MAYOR POBLACIÓN SELECCIONADA:
-            </Text>
-          </View>
-          <View>
-            {/*view de inputs */}
-            <View style={styles.containerSolucion}>
-              <Text
-                style={
-                  theme === "light"
-                    ? styles.tittle5
-                    : { ...styles.tittle5, color: "white" }
-                }
-              >
-                Próspero
-              </Text>
-              <View style={styles.textimput}>
-                <TextInput
-                  placeholder="Selecciona un punto en el mapa"
-                  placeholderTextColor={COLORS.grey}
-                  keyboardType="default"
-                  style={{
-                    width: "100%",
-                  }}
-                  editable={false}
-                />
-              </View>
-            </View>
-            <View style={styles.containerSolucion}>
-              <Text
-                style={
-                  theme === "light"
-                    ? styles.tittle5
-                    : { ...styles.tittle5, color: "white" }
-                }
-              >
-                pob0_14
-              </Text>
-              <View style={styles.textimput}>
-                <TextInput
-                  placeholder="Selecciona un punto en el mapa"
-                  placeholderTextColor={COLORS.grey}
-                  keyboardType="default"
-                  style={{
-                    width: "100%",
-                  }}
-                  editable={false}
-                />
-              </View>
-            </View>
-            <View style={styles.containerSolucion}>
-              <Text
-                style={
-                  theme === "light"
-                    ? styles.tittle5
-                    : { ...styles.tittle5, color: "white" }
-                }
-              >
-                p3a5_noa
-              </Text>
-              <View style={styles.textimput}>
-                <TextInput
-                  placeholder="Selecciona un punto en el mapa"
-                  placeholderTextColor={COLORS.grey}
-                  keyboardType="default"
-                  style={{
-                    width: "100%",
-                  }}
-                  editable={false}
-                />
-              </View>
-            </View>
-            <View style={styles.containerSolucion}>
-              <Text
-                style={
-                  theme === "light"
-                    ? styles.tittle5
-                    : { ...styles.tittle5, color: "white" }
-                }
-              >
-                pea
-              </Text>
-              <View style={styles.textimput}>
-                <TextInput
-                  placeholder="Selecciona un punto en el mapa"
-                  placeholderTextColor={COLORS.grey}
-                  keyboardType="default"
-                  style={{
-                    width: "100%",
-                  }}
-                  editable={false}
-                />
-              </View>
-            </View>
-            <View style={styles.containerSolucion}>
-              <Text
-                style={
-                  theme === "light"
-                    ? styles.tittle5
-                    : { ...styles.tittle5, color: "white" }
-                }
-              >
-                p15ym_se
-              </Text>
-              <View style={styles.textimput}>
-                <TextInput
-                  placeholder="Selecciona un punto en el mapa"
-                  placeholderTextColor={COLORS.grey}
-                  keyboardType="default"
-                  style={{
-                    width: "100%",
-                  }}
-                  editable={false}
-                />
-              </View>
-            </View>
-            <View style={styles.containerSolucion}>
-              <Text
-                style={
-                  theme === "light"
-                    ? styles.tittle5
-                    : { ...styles.tittle5, color: "white" }
-                }
-              >
-                p12ym_solt
-              </Text>
-              <View style={styles.textimput}>
-                <TextInput
-                  placeholder="Selecciona un punto en el mapa"
-                  placeholderTextColor={COLORS.grey}
-                  keyboardType="default"
-                  style={{
-                    width: "100%",
-                  }}
-                  editable={false}
-                />
-              </View>
-            </View>
-            <View style={styles.containerSolucion}>
-              <Text
-                style={
-                  theme === "light"
-                    ? styles.tittle5
-                    : { ...styles.tittle5, color: "white" }
-                }
-              >
-                pcatolica
-              </Text>
-              <View style={styles.textimput}>
-                <TextInput
-                  placeholder="Selecciona un punto en el mapa"
-                  placeholderTextColor={COLORS.grey}
-                  keyboardType="default"
-                  style={{
-                    width: "100%",
-                  }}
-                  editable={false}
-                />
-              </View>
-            </View>
-            <View style={styles.containerSolucion}>
-              <Text
-                style={
-                  theme === "light"
-                    ? styles.tittle5
-                    : { ...styles.tittle5, color: "white" }
-                }
-              >
-                p8a14an
-              </Text>
-              <View style={styles.textimput}>
-                <TextInput
-                  placeholder="Selecciona un punto en el mapa"
-                  placeholderTextColor={COLORS.grey}
-                  keyboardType="default"
-                  style={{
-                    width: "100%",
-                  }}
-                  editable={false}
-                />
-              </View>
-            </View>
-          </View>
           <View style={styles.containermap}>
-            {/*Leaflet goes here instead of google maps */}
-            <MapView style={styles.map} initialRegion={initialRegion} />
-            <Marker
-              coordinate={{
-                latitude: 19.4326, // Latitud de la Ciudad de México
-                longitude: -99.1332, // Longitud de la Ciudad de México
-              }}
-              title="Ciudad de México"
-              description="Capital de México"
-            />
+            <MapView
+              style={styles.map}
+              initialRegion={initialRegion}
+              onPress={handleMapPress}
+            >
+              {agebData.map((agebData) => {
+                try {
+                  const stAsGeoJSON = JSON.parse(agebData.st_asgeojson);
+                  const coordinates = stAsGeoJSON.coordinates[0][0].map(
+                    ([longitude, latitude]) => ({ latitude, longitude })
+                  );
+
+                  // Verificar si el cvegeo está presente en data
+                  const cvegeoEnData =
+                    limitedData &&
+                    limitedData.find((item) => item.cvegeo === agebData.cvegeo);
+
+                  if (cvegeoEnData) {
+                    return (
+                      <Polygon
+                        key={agebData.cvegeo}
+                        coordinates={coordinates}
+                        strokeWidth={1.5}
+                        strokeColor="rgb(40, 221, 160)"
+                        fillColor="rgba(117, 244, 209, 0.8)"
+                      />
+                    );
+                  } else {
+                    return null;
+                  }
+                } catch (error) {
+                  console.error("Error parsing st_asgeojson:", error);
+                  return null;
+                }
+              })}
+              {markerCoordinate && (
+                <Marker
+                  coordinate={markerCoordinate}
+                  title={selectedCvegeo1 || "Sin selección"}
+                  description={`Latitud: ${markerCoordinate.latitude}, Longitud: ${markerCoordinate.longitude}`}
+                >
+                  <Callout>
+                    <View>
+                      <Text>{selectedCvegeo1}</Text>
+                    </View>
+                  </Callout>
+                </Marker>
+              )}
+            </MapView>
           </View>
           <View>
             <Text
@@ -721,6 +733,7 @@ const Inputs_Geolocation = ({route}) => {
                   placeholder="Selecciona un punto en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={selectedCvegeo1 !== null ? String(selectedCvegeo1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -729,18 +742,21 @@ const Inputs_Geolocation = ({route}) => {
               </View>
             </View>
             <View style={styles.containerSolucion}>
-            <Text
+              <Text
                 style={
                   theme === "light"
                     ? styles.tittle5
                     : { ...styles.tittle5, color: "white" }
                 }
-              >Poblacion total:</Text>
+              >
+                Poblacion total:
+              </Text>
               <View style={styles.textimput}>
                 <TextInput
                   placeholder="Selecciona un punto en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={pobtot1 !== null ? String(pobtot1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -749,18 +765,21 @@ const Inputs_Geolocation = ({route}) => {
               </View>
             </View>
             <View style={styles.containerSolucion}>
-            <Text
+              <Text
                 style={
                   theme === "light"
                     ? styles.tittle5
                     : { ...styles.tittle5, color: "white" }
                 }
-              >Poblacion masculina</Text>
+              >
+                Poblacion masculina
+              </Text>
               <View style={styles.textimput}>
                 <TextInput
                   placeholder="Selecciona un punto en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={pobmas1 !== null ? String(pobmas1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -769,18 +788,21 @@ const Inputs_Geolocation = ({route}) => {
               </View>
             </View>
             <View style={styles.containerSolucion}>
-            <Text
+              <Text
                 style={
                   theme === "light"
                     ? styles.tittle5
                     : { ...styles.tittle5, color: "white" }
                 }
-              >Poblacion femenina</Text>
+              >
+                Poblacion femenina
+              </Text>
               <View style={styles.textimput}>
                 <TextInput
                   placeholder="Selecciona un punto en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={pobfem1 !== null ? String(pobfem1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -789,7 +811,7 @@ const Inputs_Geolocation = ({route}) => {
               </View>
             </View>
             <View style={styles.containerSolucion}>
-            <Text
+              <Text
                 style={
                   theme === "light"
                     ? styles.tittle5
@@ -803,6 +825,7 @@ const Inputs_Geolocation = ({route}) => {
                   placeholder="Selecciona un punto en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={nivsoc1 !== null ? String(nivsoc1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -811,18 +834,21 @@ const Inputs_Geolocation = ({route}) => {
               </View>
             </View>
             <View style={styles.containerSolucion}>
-            <Text
+              <Text
                 style={
                   theme === "light"
                     ? styles.tittle5
                     : { ...styles.tittle5, color: "white" }
                 }
-              >Grado de escolaridad promedio:</Text>
+              >
+                Grado de escolaridad promedio:
+              </Text>
               <View style={styles.textimput}>
                 <TextInput
                   placeholder="Selecciona un punto en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={gradoesc1 !== null ? String(gradoesc1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -831,7 +857,7 @@ const Inputs_Geolocation = ({route}) => {
               </View>
             </View>
             <View style={styles.containerSolucion}>
-            <Text
+              <Text
                 style={
                   theme === "light"
                     ? styles.tittle5
@@ -845,6 +871,7 @@ const Inputs_Geolocation = ({route}) => {
                   placeholder="Selecciona un punto en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={gradoescfem1 !== null ? String(gradoescfem1) : ""}
                   style={{
                     width: "100%",
                   }}
@@ -853,7 +880,7 @@ const Inputs_Geolocation = ({route}) => {
               </View>
             </View>
             <View style={styles.containerSolucion}>
-            <Text
+              <Text
                 style={
                   theme === "light"
                     ? styles.tittle5
@@ -862,18 +889,25 @@ const Inputs_Geolocation = ({route}) => {
               >
                 Grado de escolaridad promedio de hombres:
               </Text>
-              <View style={styles.textimput}>
+              <View style={{...styles.textimput , marginBottom: 35}}>
                 <TextInput
                   placeholder="Selecciona un punto en el mapa"
                   placeholderTextColor={COLORS.grey}
                   keyboardType="default"
+                  value={gradoescmas1 !== null ? String(gradoescmas1) : ""}
                   style={{
                     width: "100%",
                   }}
                   editable={false}
                 />
               </View>
+              <Button
+                title="Regresar al inicio"
+                onPress={() => navigation.navigate("SolucionesScreen")}
+                style={{ height: 40 }}
+              />
             </View>
+            
           </View>
           <View style={styles.textend}>
             <Text style={styles.ref}>

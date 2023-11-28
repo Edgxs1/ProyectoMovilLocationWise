@@ -12,7 +12,6 @@ import styles from "../../Styles/styles";
 import MapView, { Marker, Polygon, Callout } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import Button from "../../components/Button";
-import { textoLargo } from "../constants/textolargo";
 import Slider from "@react-native-community/slider";
 import { useTheme } from "../context/ThemeContext";
 import { hostIP } from "@env";
@@ -37,8 +36,6 @@ const Geolocation = ({ route }) => {
   const [data, setData] = useState(null);
   const [agebData, setAgebData] = useState([]);
   const [markerCoordinate, setMarkerCoordinate] = useState(null);
-  const [zonesDeployed, setZonesDeployed] = useState(false);
-  const [cvegeo1, setCvegeo1] = useState(null);
   const [pobtot1, setPobtot1] = useState(null);
   const [pobmas1, setPobmas1] = useState(null);
   const [pobfem1, setPobfem1] = useState(null);
@@ -101,7 +98,7 @@ const Geolocation = ({ route }) => {
 
   const getAgebDataBycvegeo = async (cvegeo) => {
     const ageb_endpoint = `http://${hostIP}:3000/locationwise/v1/geocode-settlement/${cvegeo}`;
-    console.log("Ip:", hostIP);
+    //console.log("Ip:", hostIP);
     console.log("Fetching: " + ageb_endpoint);
     try {
       const response = await fetch(ageb_endpoint, {
@@ -219,7 +216,7 @@ const Geolocation = ({ route }) => {
           const agebbycvegeo = data[0];
           //console.log("cvegeo: " + agebbycvegeo?.cvegeo);
           if (agebbycvegeo?.cvegeo == selectedCvegeo) {
-            console.log("son iguales");
+            //console.log("son iguales");
           } else {
             setModalVisible(true);
           }
@@ -614,7 +611,6 @@ const Geolocation = ({ route }) => {
             >
               {agebData.map((agebData) => {
                 try {
-                  //console.log("DIBUJANDOOOOO");
                   const stAsGeoJSON = JSON.parse(agebData.st_asgeojson);
                   const coordinates = stAsGeoJSON.coordinates[0][0].map(
                     ([longitude, latitude]) => ({ latitude, longitude })

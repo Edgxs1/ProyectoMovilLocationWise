@@ -4,8 +4,7 @@ export const opnivelso = [
     { label: "Medio Alto (C)", value: "C" },
     { label: "Medio Bajo (D+)", value: "D+" },
     { label: "Bajo (D)", value: "D" },
-    { label: "Precario (E)", value: "E" },
-    { label: "No tomar este dato para geolocalización", value: "null" }
+    { label: "Precario (E)", value: "E" }
   ];
 export const opnivesc = [
     {label: "Población de 3 a 5 años que no asiste a la escuela", value:"p3a5_noa"},
@@ -89,8 +88,7 @@ export const opnivesc = [
     { label: "Población masculina de 18 a 24 años", value: "p_18a24_m" },
     { label: "Población de 60 años y más", value: "p_60ymas" },
     { label: "Población femenina de 60 años y más", value: "p_60ymas_f" },
-    { label: "Población masculina de 60 años y más", value: "p_60ymas_m" },
-    { label: "No tomar este dato para geolocalización", value: "null" }
+    { label: "Población masculina de 60 años y más", value: "p_60ymas_m" }
   ];
   
   export const opnlim = [

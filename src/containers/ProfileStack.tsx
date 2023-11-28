@@ -1,5 +1,3 @@
-import CustomBottomTab from "../../components/BottomTabs/CustomBottomTab";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Settings from "../screens/Settings";
 import Perfil from "../screens/Perfil";

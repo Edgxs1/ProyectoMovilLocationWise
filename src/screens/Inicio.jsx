@@ -41,7 +41,7 @@ const Inicio = () => {
 
       if (storedUserId) {
         const userId = parseInt(storedUserId, 10);
-        console.log('Retrieved User ID from AsyncStorage:', userId);
+        //console.log('Retrieved User ID from AsyncStorage:', userId);
         return userId;
       } else {
         console.log('User ID not found in AsyncStorage');
@@ -52,7 +52,7 @@ const Inicio = () => {
   }
 
   async function getUserDataByID(id) {
-    console.log("Ip:", hostIP);
+    //console.log("Ip:", hostIP);
     const user_endpoint = `http://${hostIP}:3000/locationwise/v1/users/data/${id}`;
     console.log("Fetching: " + user_endpoint);
     try {
