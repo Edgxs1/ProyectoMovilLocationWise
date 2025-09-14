@@ -1,5 +1,3 @@
-const { response } = require('express');
-const { Pool } = require('pg');
 const pool = require('../../magedb');
 
 

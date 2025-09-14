@@ -58,6 +58,7 @@ const Welcome = ({ navigation }) => {
 
       if (response.ok) {
         const res = await response.text();
+        console.log("res: " + res);
         const message = JSON.parse(res).message;
         const userId = JSON.parse(res).userId;
         //console.log("res: " + res);
@@ -82,11 +83,11 @@ const Welcome = ({ navigation }) => {
 
 
   const handleSendData = async () => {
-    if (!isEmail(email) || !isAlphaNumeric(password)) {
+    /*if (!isEmail(email) || !isAlphaNumeric(password)) {
       Alert.alert("Caracteres no válidos", "Solo se aceptan letras y números");
     } else if (email === "" || password === "") {
       Alert.alert("Campos vacíos", "Por favor llena todos los campos");
-    } else {
+    } else {*/
       try {
         //console.log("Correo electrónico:", email);
         //console.log("Password:", password);
@@ -113,7 +114,7 @@ const Welcome = ({ navigation }) => {
       }
       setEmail("");
       setPassword("");
-    }
+    
   };
 
   return (

@@ -1,24 +1,21 @@
-const { response } = require('express');
 const pool = require('../../magedb');
 const queries = require('./queries');
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
-
 
 const validateUser = (req, res) => {
     const { usr_email, usr_pass } = req.params;
     pool.query(queries.checkEmailExists, [usr_email], (error, results) => {
         if (error) throw error;
         if (!results.rows.length) {
-            res.json({ message: 'No existe el usuario.' });
+            res.send('No existe el usuario.');
         } else {
             let hash = results.rows[0].s.split(',')[3].trim();
             hash = hash.substring(0, hash.length - 1);
             bcrypt.compare(usr_pass, hash, (error, match) => {
                 if (error) throw error;
                 if (!match) {
-                    res.json({ message: 'Contraseña incorrecta.' });
+                    res.send('Contraseña incorrecta.');
                 } else {
                     let userId = results.rows[0].s.split(',')[0].trim();
                     userId = userId.substring(1);
@@ -32,10 +29,7 @@ const validateUser = (req, res) => {
                         sameSite: 'None',
                         path: '/'
                     });
-                    res.json({
-                        message: 'Usuario validado.',
-                        userId: userId
-                    });
+                    res.send('Usuario validado.');
                     return;
                 }
             });
@@ -46,8 +40,9 @@ const validateUser = (req, res) => {
 
 
 const verifyToken = (req, res, next) => {
+    console.log('Verifying token using CORS\n');
     const authToken = req.cookies['authToken'];
-    console.log("Request cookies . . ., authToken=?" + authToken);
+    console.log("Request cookies . . ., authToken = " + authToken);
     if (!authToken) {
         console.log('No token provided');
         return res.status(401).json({ message: 'Unauthorized, No token found' });

@@ -1,4 +1,3 @@
-const { response } = require('express');
 const pool = require('../../magedb');
 const queries = require('./queries');
 const bcrypt = require('bcrypt');
@@ -52,6 +51,7 @@ const deleteUserByID = (req, res) => {
         else {
             pool.query(queries.deleteUserByID, [usr_id], (error, results) => {
                 if (error) throw error;
+                res.clearCookie('authToken');
                 res.status(200).send(`Usuario con ID ${usr_id} eliminado exitosamente.`);
             });
         }

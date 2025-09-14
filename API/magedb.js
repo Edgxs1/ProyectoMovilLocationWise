@@ -2,7 +2,7 @@ const Pool = require('pg').Pool
 
 const pool = new Pool({
     user: 'mageadmin',
-    host: 'mage-postgresql.postgres.database.azure.com',
+    host: 'mage-dev1.postgres.database.azure.com',
     database: 'mage-dev',
     password: 'F82DC03344Do!',
     port: 5432,
